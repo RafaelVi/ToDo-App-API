@@ -1,13 +1,19 @@
-const express = require('express');
-const app = express();
+const configExpress = require('./config/customExpress');
+const conex = require('./infra/conexao');
+const tabelas = require('./infra/tabelas');
 const port = 3000;
-const routeUser = require('./controllers/usuario-controller');
-const routeTask = require('./controllers/tarefa-controller');
 
-routeUser(app);
+conex.connect((erro)=>{
+  if(erro){
+    console.log(erro);
+  }
+  else{
+    console.log('Sucesso');
+    tabelas.init(conex);
+    const app = configExpress();
+    app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`);
+    })
+  }
+});
 
-routeTask(app);
-
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-})
