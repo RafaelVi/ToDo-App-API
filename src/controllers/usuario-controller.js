@@ -2,13 +2,23 @@ const route = 'user';
 const user = require('../models/usuario-model');
 function configroute(app){
     app.get(`/${route}`, (req, res) => {
-        res.send(`Rota ativada com get e rota ${route} valores de ${route} devem ser retornados`);
-      });
+      user.read(res);
+    });
+    app.get(`/${route}/:id`, (req, res) => {
+      let id = parseInt(req.params.id);
+      user.buscaPorID(res,id);
+    });  
     app.post(`/${route}`, (req, res) => {
-        console.log(req.body);
-        user.adicionar(req.body);
-        res.send('Usuário cadastrado');
-      });  
+      user.create(req.body,res);
+    });
+    app.patch(`/${route}/:id`, (req, res) => {
+      let id = parseInt(req.params.id);
+      user.update(id,req.body,res);
+    });
+    app.delete(`/${route}/:id`, (req, res) => {
+      let id = parseInt(req.params.id);
+      user.delete(id,res);
+    });       
 }
 
 module.exports = configroute; 
