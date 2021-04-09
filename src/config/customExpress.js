@@ -9,11 +9,6 @@ module.exports = () => {
     const app = express();
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(logRequest);
-    function logRequest(req,res,next){
-        console.log(req.method);
-        next();
-    } 
     routeUser(app);
     
     routeTask(app);

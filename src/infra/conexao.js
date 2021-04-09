@@ -1,12 +1,46 @@
-const mysql = require('mysql');
+// class Tabelas{
+//     init(conex){
+//         this.conex = conex;
+//         this.criaTabelas();
+//     }
+//     criaTabelas(){
+//         const sql = `
+//         CREATE TABLE IF NOT EXISTS usuario(
+//             id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
+//             username varchar(100) NOT NULL,
+//             email varchar(255) NOT NULL,
+//             \`password\` varchar(255) NOT NULL);
+//         CREATE TABLE IF NOT EXISTS tarefas(
+//             id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
+//             user_id int,
+//             name varchar(150) NOT NULL,
+//             status varchar(10) NOT NULL,
+//             description text,
+//             \`date\` date,
+//             FOREIGN KEY(user_id) references usuario(id));`;
+//         this.conex.query(sql,erro => {
+//             if(erro){
+//                 console.log(erro);
+//             }
+//             else{
+//                 console.log('tabelas criadas com sucesso');
+//             }
+//         })
+//     }
+// }
 
-const conex = mysql.createConnection({
-    host:'localhost',
-    port:3306,
-    user:'root',
-    password:'admin',
-    database:'db_toDo',
-    multipleStatements: true
-});
+// module.exports = new Tabelas;
 
-module.exports = conex;
+const sqlite3 = require('sqlite3').verbose();
+const bd = new sqlite3.Database('../../database.db');
+
+
+//Processamento de sinal
+process.on('SIGINT', () =>
+    bd.close(() => {
+        console.log('BD encerrado!');
+        process.exit(0);
+    })
+);
+
+module.exports = bd;
