@@ -5,24 +5,50 @@ const conex = require('../infra/conexao');
 const tarefaDAO = new TarefaDAO(conex);
 
 function configroute(app){
-    app.get(`/${route}`, (req, res) => {
-      tarefaDAO.listaTarefas(res);
+    app.get(`/${route}`,async (req, res) => {
+      try {
+        let response = await tarefaDAO.listaTarefas()
+        res.status(200).send(response);
+      }catch(e){
+        res.status(404).send({'Erro':'Ops! Deu erro :/'});
+      }
     })
-    app.get(`/${route}/:id`, (req, res) => {
-      const id = parseInt(req.params.id);
-      tarefa.buscaPorID(res,id);
+    app.get(`/${route}/:id`,async (req, res) => {
+      try {
+        let id = parseInt(req.params.id);
+        let response = await tarefaDAO.pesquisaTarefa(id);
+        res.status(200).send(response);
+      }catch(e){
+        res.status(404).send(e);
+      };
     })  
-    app.post(`/${route}`, (req, res) => {
-      let task = new Tarefa(req.body)
-      tarefaDAO.insereTarefa(task,res);    
+    app.post(`/${route}`,async (req, res) => {
+      try{
+        let user = new User(req.body);
+        let response = await tarefaDAO.insereTarefa(user);
+        res.status(200).send(response);
+      } catch(e){
+        res.status(404).send(e);
+      }
     });
-    app.patch(`/${route}/:id`, (req, res) => {
-      let id = parseInt(req.params.id);
-      tarefa.update(id,req.body,res);
+    app.patch(`/${route}/:id`,async (req, res) => {
+      try{
+        let id = parseInt(req.params.id);
+        let user = new User(req.body)
+        let response = await tarefaDAO.atualizaTarefa(id,user,res);
+        res.status(200).send(response);
+      } catch(e){
+        res.status(404).send(e);
+      }
     });
-    app.delete(`/${route}/:id`, (req, res) => {
-      let id = parseInt(req.params.id);
-      tarefa.delete(id,res);
+    app.delete(`/${route}/:id`,async (req, res) => {
+      try{
+        let id = parseInt(req.params.id);
+        let response = await tarefaDAO.deletaTarefa(id);
+        res.status(200).send(response);
+      } catch(e){
+        res.status(404).send(e);
+      }
     });        
 }
 
